@@ -1,0 +1,14 @@
+logging:
+  config: classpath:logback/logback-${spring.profiles.active}.xml
+
+management:
+  endpoints:
+    enabled-by-default: false
+  tracing:
+    enabled: true
+
+sentry:
+  environment: ${spring.profiles.active}
+  traces-sample-rate: 1.0
+  send-default-pii: true
+  enable-tracing: true
