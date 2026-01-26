@@ -37,3 +37,22 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Personal Configuration Files ###
+**/application-personal.yml
+**/application-local.yml
+**/application-local-*.yml
+**/application-ldk.yml
+**/*-secret.yml
+**/storage-database-local.yml
+
+### Security Keys ###
+**/keys/private-key.pem
+
+### Environment Files ###
+.env
+.env.*
+!.env.example
+
+### Documentation ###
+*.md

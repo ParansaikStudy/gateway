@@ -1,10 +1,11 @@
 plugins {
     id("org.springframework.boot")
-    id("io.spring.dependency-management")
     id("zqksk-api-gateway.java-conventions")
 }
 
 dependencies {
+    implementation(platform("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}"))
+
     implementation(project(":domain:user"))
     implementation(project(":storage:database"))
     implementation(project(":support:core-exception"))
@@ -22,12 +23,6 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-}
-
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-    }
 }
 
 tasks.getByName("bootJar") {

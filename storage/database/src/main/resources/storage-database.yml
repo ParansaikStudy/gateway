@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:classpath:storage-database-secret.yml
   jpa:
     open-in-view: false
     hibernate:
@@ -11,6 +13,8 @@ spring:
 
 ---
 spring.config.activate.on-profile: local
+
+# db 정보는 storage-database-secret.yml에서 관리됩니다.
 
 storage:
   database:
@@ -35,6 +39,8 @@ spring:
 
 ---
 spring.config.activate.on-profile: dev
+
+# db 정보는 storage-database-secret.yml에서 관리됩니다.
 
 storage:
   database:
@@ -67,12 +73,36 @@ storage:
 spring:
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         show_log: true
         format_sql: true
+
+---
+spring.config.activate.on-profile: docker
+
+storage:
+  database:
+    core:
+      driver-class-name: org.mariadb.jdbc.Driver
+      jdbc-url: jdbc:mariadb://${DB_HOST:mariadb}:${DB_PORT:3306}/${DB_SCHEMA:ldk}
+      username: ${DB_USERNAME:ldk}
+      password: ${DB_PASSWORD:password}
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      pool-name: core-db-pool
+      data-source-properties:
+        characterEncoding: UTF-8
+        serverTimezone: Asia/Seoul
+        rewriteBatchedStatements: true
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
 
 ---
 spring.config.activate.on-profile: prod

@@ -1,0 +1,42 @@
+# Git
+.git
+.gitignore
+
+# Gradle
+.gradle
+**/build/classes
+**/build/generated
+**/build/reports
+**/build/test-results
+**/build/tmp
+**/out
+
+# IDE
+.idea
+*.iml
+.vscode
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 불필요한 JAR 제외 (필요한 JAR만 포함)
+# api/*/build/libs/*.jar는 필요하므로 제외하지 않음
+
+# Node
+node_modules
+
+# 문서
+*.md
+!README.md
+
+# 테스트
+**/src/test
+
+# buildSrc 캐시
+buildSrc/.gradle
+buildSrc/build
