@@ -1,0 +1,77 @@
+{
+  "groups": [
+    {
+      "name": "jwt",
+      "type": "com.zqksk.api.config.JwtProperties",
+      "sourceType": "com.zqksk.api.config.JwtProperties"
+    },
+    {
+      "name": "open-zqksk",
+      "type": "com.zqksk.api.config.OpenZqkskProperties",
+      "sourceType": "com.zqksk.api.config.OpenZqkskProperties"
+    },
+    {
+      "name": "rsa",
+      "type": "com.zqksk.api.config.RSAKeyProperties",
+      "sourceType": "com.zqksk.api.config.RSAKeyProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "jwt.access-expiration-time",
+      "type": "java.lang.Long",
+      "sourceType": "com.zqksk.api.config.JwtProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "jwt.key-prefix",
+      "type": "java.lang.String",
+      "sourceType": "com.zqksk.api.config.JwtProperties"
+    },
+    {
+      "name": "jwt.refresh-expiration-time",
+      "type": "java.lang.Long",
+      "sourceType": "com.zqksk.api.config.JwtProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "open-zqksk.host",
+      "type": "java.lang.String",
+      "sourceType": "com.zqksk.api.config.OpenZqkskProperties"
+    },
+    {
+      "name": "open-zqksk.path",
+      "type": "java.lang.String",
+      "sourceType": "com.zqksk.api.config.OpenZqkskProperties"
+    },
+    {
+      "name": "open-zqksk.query-id",
+      "type": "java.lang.String",
+      "sourceType": "com.zqksk.api.config.OpenZqkskProperties"
+    },
+    {
+      "name": "open-zqksk.query-password",
+      "type": "java.lang.String",
+      "sourceType": "com.zqksk.api.config.OpenZqkskProperties"
+    },
+    {
+      "name": "open-zqksk.scheme",
+      "type": "java.lang.String",
+      "sourceType": "com.zqksk.api.config.OpenZqkskProperties"
+    },
+    {
+      "name": "rsa.private-key",
+      "type": "java.security.interfaces.RSAPrivateKey",
+      "sourceType": "com.zqksk.api.config.RSAKeyProperties"
+    },
+    {
+      "name": "rsa.public-key",
+      "type": "java.security.interfaces.RSAPublicKey",
+      "sourceType": "com.zqksk.api.config.RSAKeyProperties"
+    }
+  ],
+  "hints": [],
+  "ignored": {
+    "properties": []
+  }
+}

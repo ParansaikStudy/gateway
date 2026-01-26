@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+    <springProperty name="APP_NAME" source="spring.application.name" scope="context"/>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+    <property name="ZQKSK_LOG_PATTERN" value="%clr(%d{HH:mm:ss.SSS}){faint}|%clr(${level:-%5p})|%32X{traceId:-},%16X{spanId:-}|%clr(%-40.40logger{39}){cyan}%clr(|){faint}%m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${ZQKSK_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- local -->
+    <springProfile name="local">
+        <logger name="org.springframework" level="INFO" />
+        <logger name="com.zqksk" level="DEBUG" />
+        <logger name="org.hibernate.SQL" level="DEBUG" />
+        <logger name="org.hibernate.orm.jdbc.bind" level="TRACE" />
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- dev -->
+    <springProfile name="dev">
+        <appender name="SENTRY" class="io.sentry.logback.SentryAppender">
+            <options>
+                <dsn>http://ca7ad27434d71ea8ba31e593432ec767@dev-oss.zqksk.com:9000/2</dsn>
+            </options>
+            <minimumEventLevel>INFO</minimumEventLevel>
+            <minimumBreadcrumbLevel>DEBUG</minimumBreadcrumbLevel>
+        </appender>
+
+        <logger name="org.springframework" level="WARN" />
+        <logger name="com.zqksk" level="WARN" />
+        <logger name="org.hibernate.SQL" level="DEBUG" />
+        <logger name="org.hibernate.orm.jdbc.bind" level="TRACE" />
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="SENTRY"/>
+        </root>
+    </springProfile>
+
+    <!-- docker -->
+    <springProfile name="docker">
+        <logger name="org.springframework" level="WARN" />
+        <logger name="com.zqksk" level="INFO" />
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- prod -->
+    <springProfile name="prod">
+        <property name="ZQKSK_LOG_PATH" value="/app/logs"/>
+        <property name="ZQKSK_LOG_FILENAME" value="${APP_NAME}-log"/>
+
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <encoder>
+                <pattern>${ZQKSK_LOG_PATTERN}</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${ZQKSK_LOG_PATH}/${ZQKSK_LOG_FILENAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+        </appender>
+
+        <appender name="SENTRY" class="io.sentry.logback.SentryAppender">
+            <options>
+                <dsn>dsn</dsn>
+            </options>
+            <minimumEventLevel>INFO</minimumEventLevel>
+            <minimumBreadcrumbLevel>DEBUG</minimumBreadcrumbLevel>
+        </appender>
+
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="com.zqksk" level="INFO"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="SENTRY"/>
+            <appender-ref ref="FILE"/>
+        </root>
+    </springProfile>
+
+</configuration>

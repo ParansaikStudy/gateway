@@ -51,7 +51,7 @@ public class DentistryEmployeeEntity extends BaseEntity {
 
     @Lob
     @Comment("프로필 사진")
-    @Column(name = "profile", columnDefinition = "LONGBLOB")
+    @Column(name = "profile", columnDefinition = "BLOB")
     private byte[] profile;
 
     @Builder

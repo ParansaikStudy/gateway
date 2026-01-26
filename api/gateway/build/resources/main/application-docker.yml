@@ -1,0 +1,6 @@
+# Docker 환경 전용 설정
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery:7001/eureka

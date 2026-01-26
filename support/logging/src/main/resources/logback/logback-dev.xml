@@ -15,6 +15,7 @@
         </encoder>
     </appender>
 
+    <!--
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
             <pattern>${ZQKSK_LOG_PATTERN}</pattern>
@@ -25,6 +26,7 @@
             <maxHistory>30</maxHistory>
         </rollingPolicy>
     </appender>
+    -->
 
     <appender name="SENTRY" class="io.sentry.logback.SentryAppender">
         <options>
