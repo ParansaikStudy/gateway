@@ -1,0 +1,76 @@
+name: Task
+description: Feature / Bug / Refactor 단위 작업
+title: "[Domain] 무엇을 할지 간단히"
+labels: []
+assignees: []
+
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      description: 이 이슈의 성격 (정확히 1개)
+      options:
+        - type:feature
+        - type:bug
+        - type:refactor
+        - type:infra
+        - type:research
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact
+      description: 왜 이 이슈가 중요한가
+      options:
+        - impact:revenue
+        - impact:growth
+        - impact:stability
+        - impact:performance
+        - impact:maintenance
+    validations:
+      required: false
+
+  - type: dropdown
+    id: effort
+    attributes:
+      label: Effort
+      description: 대략적인 작업 크기
+      options:
+        - effort:s
+        - effort:m
+        - effort:l
+    validations:
+      required: false
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What
+      description: 무엇을 하는 이슈인가
+      placeholder: 명확한 작업 내용
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: 왜 지금 해야 하는가
+      placeholder: 배경 / 문제 / 맥락
+    validations:
+      required: true
+
+  - type: textarea
+    id: done
+    attributes:
+      label: Done Criteria
+      description: 완료 조건 (체크리스트)
+      value: |
+        - [ ] 기능 동작 확인
+        - [ ] 테스트 통과
+        - [ ] 리뷰 반영
+    validations:
+      required: true
