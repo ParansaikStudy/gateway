@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip3 list:*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -m pip install:*)",
+      "Bash(sudo apt-get update:*)",
+      "Bash(sudo apt-get install:*)",
+      "WebSearch",
+      "Bash(find /mnt/c/Users/dbzos/OneDrive/Desktop/gateway-dev -type f -name \"DentistryService.java\" -exec head -40 {} \\\\;)"
+    ]
+  }
+}

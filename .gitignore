@@ -37,3 +37,10 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Markdown (docs) ###
+*.md
+
+### Git merge conflict backups ###
+docker-compose_*_*.yml
+Jenkinsfile_*_*

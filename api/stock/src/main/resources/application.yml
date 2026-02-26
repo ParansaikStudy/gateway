@@ -1,0 +1,32 @@
+server:
+  port: 7004
+
+spring:
+  application:
+    name: zqksk-stock-service
+
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 30
+
+# 한국투자증권 OpenAPI (실전: production, 모의: practice)
+kis:
+  app-key: ${KIS_APP_KEY:}
+  app-secret: ${KIS_APP_SECRET:}
+  environment: practice  # practice | production
+
+---
+spring.config.activate.on-profile: local
+server:
+  port: 17004
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:17001/eureka

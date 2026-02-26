@@ -1,12 +1,9 @@
 rootProject.name = "zqksk-api-gateway"
 
-include("api:external-api")
-include("api:internal-api")
-include("api:batch-api")
-include("api:push-api")
 include("api:auth")
 include("api:discovery")
 include("api:gateway")
+include("api:stock")
 include("domain:customer")
 include("domain:dentistry")
 include("domain:user")
