@@ -1,0 +1,73 @@
+server:
+  port: 7005
+
+spring:
+  application:
+    name: zqksk-stock-service
+  config:
+    import:
+      - logging.yml
+      - optional:classpath:application-secret.yml
+
+# 한국투자증권 Open API (application-secret.yml 또는 환경변수 KIS_APP_KEY, KIS_APP_SECRET)
+kis:
+  app-key: ${KIS_APP_KEY:}
+  app-secret: ${KIS_APP_SECRET:}
+  environment: ${KIS_ENVIRONMENT:practice}
+
+# Google Gemini API (application-secret.yml 또는 환경변수 GEMINI_API_KEY)
+gemini:
+  api-key: ${GEMINI_API_KEY:}
+  model: ${GEMINI_MODEL:gemini-2.5-flash}
+
+# 인기 종목 탑500 분석 결과 저장 경로 (DB 미사용, JSON 파일)
+# data-dir 아래: top500-domestic-analysis.json, top500-overseas-analysis.json, top500-codes.txt, top500-overseas-codes.txt
+stock:
+  gemini:
+    data-dir: ${STOCK_GEMINI_DATA_DIR:./data}
+    top500:
+      # 국내 탑500: 매일 03:15 KST
+      cron: ${STOCK_GEMINI_TOP500_CRON:0 20 15 * * *}
+      # 해외 탑500: 매일 03:20 KST
+      overseas:
+        cron: ${STOCK_GEMINI_TOP500_OVERSEAS_CRON:0 35 15 * * *}
+
+# 토스페이먼츠 (무료 3회 이후 분석 유료 결제 5,000원)
+toss:
+  payments:
+    secret-key: ${TOSS_PAYMENTS_SECRET_KEY:}
+    client-key: ${TOSS_PAYMENTS_CLIENT_KEY:}
+
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 30
+    disable-delta: false
+
+---
+spring.config.activate.on-profile: local
+
+server:
+  port: 17005
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:17001/eureka
+
+logging:
+  level:
+    com.zqksk: debug
+
+---
+spring.config.activate.on-profile: dev
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka

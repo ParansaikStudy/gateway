@@ -1,0 +1,108 @@
+spring:
+  config:
+    import: optional:classpath:storage-database-secret.yml
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+      database-platform: org.hibernate.dialect.MariaDBDialect
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+        default_batch_fetch_size: 100
+
+---
+spring.config.activate.on-profile: local
+
+# db 정보는 storage-database-secret.yml에서 관리됩니다.
+
+storage:
+  database:
+    core:
+      driver-class-name: org.mariadb.jdbc.Driver
+      jdbc-url: jdbc:mariadb://${db.host}:${db.port}/${db.schema}
+      username: ${db.username}
+      password: ${db.password}
+      pool-name: core-db-pool
+      data-source-properties:
+        characterEncoding: UTF-8
+        serverTimezone: Asia/Seoul
+        rewriteBatchedStatements: true
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+
+---
+spring.config.activate.on-profile: dev
+
+# db 정보는 storage-database-secret.yml에서 관리됩니다.
+
+storage:
+  database:
+    core:
+      driver-class-name: org.mariadb.jdbc.Driver
+      jdbc-url: jdbc:mariadb://${db.host}:${db.port}/${db.schema}
+      username: ${db.username}
+      password: ${db.password}
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      keepalive-time: 60000
+      validation-timeout: 5000
+      max-lifetime: 3600000
+      pool-name: core-db-pool
+      data-source-properties:
+        cachePrepStmts: true
+        cacheResultSetMetadata: true
+        cacheServerConfiguration: true
+        characterEncoding: UTF-8
+        elideSetAutoCommits: true
+        maintainTimeStats: false
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        rewriteBatchedStatements: true
+        serverTimezone: Asia/Seoul
+        socketTimeout: 30000
+        useServerPrepStmts: true
+        useLocalSessionState: true
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        show_log: true
+        format_sql: true
+
+---
+spring.config.activate.on-profile: docker
+
+storage:
+  database:
+    core:
+      driver-class-name: org.mariadb.jdbc.Driver
+      jdbc-url: jdbc:mariadb://${DB_HOST:mariadb}:${DB_PORT:3306}/${DB_SCHEMA:ldk}
+      username: ${DB_USERNAME:ldk}
+      password: ${DB_PASSWORD:password}
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      pool-name: core-db-pool
+      data-source-properties:
+        characterEncoding: UTF-8
+        serverTimezone: Asia/Seoul
+        rewriteBatchedStatements: true
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+---
+spring.config.activate.on-profile: prod

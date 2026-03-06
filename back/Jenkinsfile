@@ -1,0 +1,116 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+        REGISTRY = 'zqksk'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                echo 'Source code checkout completed'
+            }
+        }
+
+        stage('Gradle Build') {
+            steps {
+                sh 'chmod +x gradlew'
+                sh './gradlew clean build -x test'
+            }
+        }
+
+        stage('Docker Build') {
+            parallel {
+                stage('Build Discovery') {
+                    steps {
+                        sh 'docker build -t ${REGISTRY}/discovery:${BUILD_NUMBER} -f docker/discovery/Dockerfile .'
+                        sh 'docker tag ${REGISTRY}/discovery:${BUILD_NUMBER} ${REGISTRY}/discovery:latest'
+                    }
+                }
+                stage('Build Auth') {
+                    steps {
+                        sh 'docker build -t ${REGISTRY}/auth:${BUILD_NUMBER} -f docker/auth/Dockerfile .'
+                        sh 'docker tag ${REGISTRY}/auth:${BUILD_NUMBER} ${REGISTRY}/auth:latest'
+                    }
+                }
+                stage('Build Gateway') {
+                    steps {
+                        sh 'docker build -t ${REGISTRY}/gateway:${BUILD_NUMBER} -f docker/gateway/Dockerfile .'
+                        sh 'docker tag ${REGISTRY}/gateway:${BUILD_NUMBER} ${REGISTRY}/gateway:latest'
+                    }
+                }
+                stage('Build Stock') {
+                    steps {
+                        sh 'docker build -t ${REGISTRY}/stock:${BUILD_NUMBER} -f docker/stock/Dockerfile .'
+                        sh 'docker tag ${REGISTRY}/stock:${BUILD_NUMBER} ${REGISTRY}/stock:latest'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker compose stop gateway stock auth discovery mariadb || true; \
+                    docker compose rm -f gateway stock auth discovery mariadb || true; \
+                    docker compose up -d mariadb; \
+                    sleep 15; \
+                    docker compose up -d discovery; \
+                    sleep 15; \
+                    docker compose up -d auth stock gateway; \
+                    sleep 30
+                '''
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                script {
+                    sh '''
+                        echo "Waiting for services to start..."
+
+                        check_health() {
+                            local name=$1
+                            local container=$2
+                            local port=$3
+                            local max_retry=20
+
+                            for i in $(seq 1 $max_retry); do
+                                if docker exec $container curl -s -o /dev/null -w '%{http_code}' http://localhost:$port/ | grep -qE '^[1-5]'; then
+                                    echo "$name is healthy!"
+                                    return 0
+                                fi
+                                echo "$name not ready, retry $i/$max_retry..."
+                                sleep 5
+                            done
+                            echo "$name failed to start!"
+                            return 1
+                        }
+
+                        check_health "Discovery" "zqksk-discovery" "7001" || exit 1
+                        check_health "Auth" "zqksk-auth" "7002" || exit 1
+                        check_health "Stock" "zqksk-stock" "7005" || exit 1
+                        check_health "Gateway" "zqksk-gateway" "7003" || exit 1
+
+                        echo "All services are healthy!"
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed!'
+            sh 'docker compose logs'
+        }
+        always {
+            sh 'docker system prune -f || true'
+        }
+    }
+}
