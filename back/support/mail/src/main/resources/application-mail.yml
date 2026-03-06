@@ -1,0 +1,15 @@
+spring:
+  task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 10
+        queue-capacity: 30
+  mail:
+    host: smtp.email
+    port: 25
+    username: eamil
+    password: password
+    properties:
+      mail:
+        debug: true

@@ -1,39 +1,76 @@
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+# Root ignore rules for both `back` and `front`
 
-### IntelliJ IDEA ###
-.idea
+### Common editor / OS files ###
+.DS_Store
+.idea/
+.vscode/
 *.iws
 *.iml
 *.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+### Environment files ###
+.env
+.env.*
+!.env.example
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+### Security keys ###
+*.pem
+back/**/keys/private-key.pem
 
-### VS Code ###
-.vscode/
+### Back / Gradle / JVM ###
+back/.gradle/
+back/**/build/
+!back/gradle/wrapper/gradle-wrapper.jar
+!back/**/src/main/**/build/
+!back/**/src/test/**/build/
+back/**/out/
+!back/**/src/main/**/out/
+!back/**/src/test/**/out/
+back/**/.apt_generated
+back/**/.classpath
+back/**/.factorypath
+back/**/.project
+back/**/.settings
+back/**/.springBeans
+back/**/.sts4-cache
+back/**/bin/
+!back/**/src/main/**/bin/
+!back/**/src/test/**/bin/
+back/nbproject/private/
+back/nbbuild/
+back/dist/
+back/nbdist/
+back/.nb-gradle/
 
-### Mac OS ###
-.DS_Store
+### Back personal / secret config ###
+back/**/application-personal.yml
+back/**/application-local.yml
+back/**/application-local-*.yml
+back/**/application-ldk.yml
+back/**/*-secret.yml
+back/**/storage-database-local.yml
+
+### Back local docs ###
+back/**/*.md
+
+### Front / Node / Next ###
+front/node_modules/
+front/.pnp
+front/.pnp.*
+front/.yarn/*
+!front/.yarn/patches
+!front/.yarn/plugins
+!front/.yarn/releases
+!front/.yarn/versions
+front/coverage/
+front/.next/
+front/out/
+front/build/
+front/npm-debug.log*
+front/yarn-debug.log*
+front/yarn-error.log*
+front/.pnpm-debug.log*
+front/.vercel/
+front/*.tsbuildinfo
+front/next-env.d.ts
+front/STACK.md

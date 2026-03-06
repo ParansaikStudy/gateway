@@ -1,0 +1,52 @@
+server:
+  port: 7001
+
+spring:
+  application:
+    name: zqksk-discovery-service
+  config:
+    import:
+      - logging.yml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+
+eureka:
+  server:
+    eviction-interval-timer-in-ms: 60000
+    response-cache-update-interval-ms: 30000
+    # 개발 환경에서는 false로 씀
+    enable-self-preservation: false
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+---
+spring.config.activate.on-profile: local
+
+server:
+  port: 17001
+
+eureka:
+  instance:
+    hostname: localhost
+
+---
+spring.config.activate.on-profile: dev
+
+eureka:
+  instance:
+    hostname: dev-api.zqksk.com
+
+
+---
+spring.config.activate.on-profile: prod
