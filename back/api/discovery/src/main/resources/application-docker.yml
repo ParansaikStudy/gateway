@@ -1,0 +1,6 @@
+# Docker 환경 전용 설정
+
+eureka:
+  instance:
+    hostname: discovery
+    prefer-ip-address: true

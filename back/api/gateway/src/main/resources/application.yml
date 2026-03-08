@@ -1,0 +1,68 @@
+server:
+  port: 7003
+
+spring:
+  application:
+    name: zqksk-api-gateway
+  config:
+    import:
+      - logging.yml
+
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 30
+    disable-delta: false
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    tags-sorter: alpha
+    enabled: true
+    urls:
+      - url: /external-api/zqksk-external-api-service/v3/api-docs
+        name: zqksk-external-api-service
+        display-name: API
+      - url: /internal-api/zqksk-internal-api-service/v3/api-docs
+        name: zqksk-internal-api-service
+        display-name: Internal API
+    urls-primary-name: zqksk-external-api-service
+    path: /swagger-ui.html
+  packages-to-scan: com.zqksk.api
+
+logging:
+  level:
+    com.netflix.discovery.DiscoveryClient: warn
+
+---
+spring.config.activate.on-profile: local
+
+server:
+  port: 17000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:17001/eureka
+
+logging:
+  level:
+    com.netflix.discovery.DiscoveryClient: warn
+
+---
+spring.config.activate.on-profile: dev
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+
+---
+spring.config.activate.on-profile: prod

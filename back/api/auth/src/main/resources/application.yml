@@ -1,0 +1,70 @@
+server:
+  port: 7002
+
+spring:
+  application:
+    name: zqksk-auth-service
+  config:
+    import:
+      - storage-database.yml
+      - application-mail.yml
+      - logging.yml
+
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 30
+    disable-delta: false
+
+open-zqksk:
+  queryId: hif_gateu
+  queryPassword: hif_gatep
+  scheme: http
+  host: localhost:8080
+  path: msg/msgLogin.hi
+
+rsa:
+  public-key: classpath:/keys/public-key.pem
+  private-key: classpath:/keys/private-key.pem
+
+jwt:
+  access-expiration-time: 7200
+  refresh-expiration-time: 86400
+  key-prefix: 'zqksk:authentication:token:'
+
+---
+spring.config.activate.on-profile: local
+
+server:
+  port: 17002
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:17001/eureka
+
+logging:
+  level:
+    com.netflix.discovery.DiscoveryClient: warn
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+    com.zqksk.api: debug
+
+---
+spring.config.activate.on-profile: dev
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+
+---
+spring.config.activate.on-profile: stage
+
+---
+spring.config.activate.on-profile: prod
