@@ -10,7 +10,9 @@ allprojects {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
 }
 
 repositories {
@@ -32,8 +34,11 @@ configurations {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:${property("springBootVersion")}"))
+    annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:${property("springBootVersion")}"))
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -45,5 +50,5 @@ tasks.withType<Test> {
 }
 
 with(extensions.getByType(JacocoPluginExtension::class.java)) {
-    toolVersion = "0.8.11"
+    toolVersion = "0.8.14"
 }

@@ -1,14 +1,64 @@
+### 로그인 (dev 프로파일 - 포트 17002)
+POST http://localhost:17002/auth/v1/login
+Content-Type: application/json
+
+{
+  "employeeNo": "test123",
+  "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi"
+}
+
+### 토큰 검증
+POST http://localhost:17002/auth/v1/verify
+Authorization: ZQKSK AK eyJhbGciOiJSUzI1NiJ9
+Content-Type: application/json
+
 ### 올바른 Key로 요청
-POST http://localhost:7000/auth/v1/verify
+POST http://localhost:7003/auth/v1/verify
 Authorization: ZQKSK AK eyJhbGciOiJSUzI1NiJ9
 Content-Type: application/json
 
 ### 잘못된 Key로 요청
-POST http://localhost:7000/auth/v1/verify
+POST http://localhost:7002/auth/v1/verify
 Authorization: ZQKSK AK1 eyJhbGciOiJSUzI1NiJ9
 Content-Type: application/json
 
 ### 유효하지 않은 Key로 요청
-POST http://localhost:7000/auth/v1/verify
+POST http://localhost:7002/auth/v1/verify
 Authorization: ZQKSK AK eyJhbGciOiJSUzI1NiJ
 Content-Type: application/json
+
+
+###
+@gateway = http://192.168.45.87:7003
+@eureka = http://192.168.45.87:7001
+
+### Dev Server
+POST {{gateway}}/auth/v1/login
+Content-Type: application/json
+
+{
+  "employeeNo": "test01",
+  "password": "password"
+}
+### 1. 로그인
+POST {{gateway}}/auth/v1/login
+Content-Type: application/json
+
+{
+"employeeNo": "test01",
+"password": "password"
+}
+
+### 2. 로그아웃
+POST {{gateway}}/auth/v1/logout
+
+### 3. 토큰 검증
+POST {{gateway}}/auth/v1/verify
+
+### 4. 내 정보 조회
+GET {{gateway}}/auth/v1/my-info
+
+### 5. Eureka 대시보드
+GET {{eureka}}/
+
+
