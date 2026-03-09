@@ -1,7 +1,7 @@
 package com.zqksk.api.stock.controller;
 
-import com.zqksk.api.stock.model.PaymentConfirmRequest;
-import com.zqksk.api.stock.model.PaymentCreateResponse;
+import com.zqksk.api.stock.dto.payment.PaymentConfirmRequest;
+import com.zqksk.api.stock.dto.payment.PaymentCreateResponse;
 import com.zqksk.api.stock.service.TossPaymentsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

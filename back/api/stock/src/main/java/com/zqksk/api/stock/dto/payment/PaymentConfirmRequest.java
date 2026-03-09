@@ -1,4 +1,4 @@
-package com.zqksk.api.stock.model;
+package com.zqksk.api.stock.dto.payment;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

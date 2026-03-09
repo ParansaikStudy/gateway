@@ -1,7 +1,7 @@
-package com.zqksk.api.stock.model;
+package com.zqksk.api.stock.dto.analysis;
 
-import com.zqksk.api.stock.client.KisDailyItem;
-import com.zqksk.api.stock.client.KisPriceOutput;
+import com.zqksk.api.stock.dto.kis.KisDailyItem;
+import com.zqksk.api.stock.dto.kis.KisPriceOutput;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +27,7 @@ public class AnalysisRequest {
 
     /** 프론트에서 KIS로 조회한 현재가. 있으면 백엔드 KIS 설정 없이 분석 가능 */
     private KisPriceOutput price;
+
     /** 프론트에서 KIS로 조회한 일봉 목록. price와 함께 있으면 백엔드 KIS 호출 생략 */
     private List<KisDailyItem> dailyChart;
 

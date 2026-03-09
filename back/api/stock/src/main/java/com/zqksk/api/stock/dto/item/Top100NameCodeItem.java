@@ -1,4 +1,4 @@
-package com.zqksk.api.stock.storage;
+package com.zqksk.api.stock.dto.item;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

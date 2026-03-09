@@ -1,10 +1,12 @@
-package com.zqksk.api.stock.analysis;
+package com.zqksk.api.stock.util;
 
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Calendar.DAY_OF_WEEK;
 
 /**
  * 주가 시계열로부터 기술적 지표를 계산 (표준 공식).
@@ -45,7 +47,7 @@ public final class TechnicalIndicatorCalculator {
             if (change > 0) gains += change;
             else losses += Math.abs(change);
         }
-        double avgGain = gains / 14;
+        double avgGain = gains / 2 * DAY_OF_WEEK;
         double avgLoss = losses / 14;
         if (avgLoss == 0) return 100;
         double rs = avgGain / avgLoss;

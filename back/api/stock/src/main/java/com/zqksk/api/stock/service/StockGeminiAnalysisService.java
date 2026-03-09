@@ -1,16 +1,16 @@
 package com.zqksk.api.stock.service;
 
-import com.zqksk.api.stock.analysis.AnalysisData;
-import com.zqksk.api.stock.analysis.TechnicalIndicatorCalculator;
 import com.zqksk.api.stock.client.GeminiClient;
 import com.zqksk.api.stock.client.KisApiClient;
-import com.zqksk.api.stock.client.KisDailyItem;
 import com.zqksk.api.stock.client.KisOverseasApiClient;
-import com.zqksk.api.stock.client.KisPriceOutput;
 import com.zqksk.api.stock.config.GeminiProperties;
 import com.zqksk.api.stock.config.KisProperties;
-import com.zqksk.api.stock.model.AnalysisResponse;
+import com.zqksk.api.stock.dto.analysis.AnalysisData;
+import com.zqksk.api.stock.dto.analysis.AnalysisResponse;
+import com.zqksk.api.stock.dto.kis.KisDailyItem;
+import com.zqksk.api.stock.dto.kis.KisPriceOutput;
 import com.zqksk.api.stock.storage.Top100AnalysisStore;
+import com.zqksk.api.stock.util.TechnicalIndicatorCalculator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,9 +36,11 @@ public class StockGeminiAnalysisService {
 
     private final KisProperties kisProperties;
     private final GeminiProperties geminiProperties;
+
     private final KisApiClient kisApiClient;
     private final KisOverseasApiClient kisOverseasApiClient;
     private final GeminiClient geminiClient;
+
     private final Top100AnalysisStore top100AnalysisStore;
 
     /**
@@ -152,6 +154,7 @@ public class StockGeminiAnalysisService {
                     + realTimeSummary + "\n\n"
                     + "1) 지금 {주식명}은 [상방/하방] 압력입니다.\n"
                     + "2) [단기선 아래/위], [중기선 근처/위/아래]로 [조정국면/반등 가능성 등] 이러한 상황입니다.\n"
+//                    + Message.DEFAULT_NOT_IN_TOP500.getMessage()
                     + "3) 따라서 현재 매도하면 손실율 약 -x~-y%, 매수하면 반등 시 수익률 약 +a~+b% 가능합니다.";
             }
 

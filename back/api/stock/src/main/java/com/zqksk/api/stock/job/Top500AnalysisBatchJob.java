@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zqksk.api.stock.client.GeminiClient;
 import com.zqksk.api.stock.client.KisApiClient;
-import com.zqksk.api.stock.client.KisDailyItem;
-import com.zqksk.api.stock.client.KisPriceOutput;
 import com.zqksk.api.stock.config.GeminiProperties;
 import com.zqksk.api.stock.config.KisProperties;
+import com.zqksk.api.stock.dto.item.Top500DomesticAnalysisItem;
+import com.zqksk.api.stock.dto.kis.KisDailyItem;
+import com.zqksk.api.stock.dto.kis.KisPriceOutput;
 import com.zqksk.api.stock.storage.Top100AnalysisStore;
-import com.zqksk.api.stock.storage.Top500DomesticAnalysisItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -50,7 +50,7 @@ public class Top500AnalysisBatchJob {
             log.warn("탑500 배치 스킵: KIS API 미설정");
             return;
         }
-        if (!geminiProperties.isConfigured()) {
+        if (geminiProperties.isConfigured()) {
             log.warn("탑500 배치 스킵: Gemini API 미설정");
             return;
         }
@@ -114,6 +114,7 @@ public class Top500AnalysisBatchJob {
         for (StockSummary s : chunk) {
             data.append(s.summary).append("\n\n");
         }
+
         return "다음은 한국 시장 인기 종목 " + chunk.size() + "개의 시세·일봉 요약입니다.\n"
             + "각 종목에 대해 **아래 3문장 형식으로만** 분석해 주세요. 다른 설명은 붙이지 마세요.\n"
             + "1) 지금 {주식명}은 [상방/하방] 압력입니다.\n"

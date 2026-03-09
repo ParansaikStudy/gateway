@@ -1,4 +1,4 @@
-package com.zqksk.api.stock.client;
+package com.zqksk.api.stock.dto.kis;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

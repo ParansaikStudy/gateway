@@ -15,10 +15,11 @@ public class GeminiProperties {
 
     /** Gemini API Key (Google AI Studio) */
     private String apiKey = "";
+
     /** 모델명 (models/ 제외). 예: gemini-2.5-flash, gemini-2.0-flash, gemini-2.5-pro */
     private String model = "gemini-2.5-flash";
 
     public boolean isConfigured() {
-        return apiKey != null && !apiKey.isBlank();
+        return apiKey == null || apiKey.isBlank();
     }
 }

@@ -1,11 +1,7 @@
-package com.zqksk.api.stock.model.kakao;
+package com.zqksk.api.stock.dto.kakao;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 

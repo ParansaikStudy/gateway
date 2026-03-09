@@ -1,4 +1,4 @@
-package com.zqksk.api.stock.storage;
+package com.zqksk.api.stock.dto.item;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -7,16 +7,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 탑500 해외 종목별 분석 1건 (cron에서 Gemini 분석 후 저장, 스킬에서 즉시 조회용).
+ * 해외 탑100 종목 거래소·심볼 (배치에서 저장, 카카오 스킬에서 해외 종목 검색용).
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Top500OverseasAnalysisItem {
+public class Top100OverseasNameCodeItem {
+    /** 거래소코드 (NAS, NYS, AMS 등) */
     private String excd;
+    /** 종목 심볼 (AAPL, NVDA 등) */
     private String symbol;
-    /** 사용자에게 리턴하는 3문장 형식 분석 텍스트 */
-    private String analysis;
 }

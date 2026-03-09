@@ -1,14 +1,14 @@
 package com.zqksk.api.stock.service;
 
-import com.zqksk.api.stock.analysis.AnalysisData;
-import com.zqksk.api.stock.analysis.TechnicalIndicatorCalculator;
 import com.zqksk.api.stock.client.KisApiClient;
-import com.zqksk.api.stock.client.KisDailyItem;
 import com.zqksk.api.stock.client.KisOverseasApiClient;
-import com.zqksk.api.stock.client.KisPriceOutput;
 import com.zqksk.api.stock.config.KisProperties;
-import com.zqksk.api.stock.model.AnalysisRequest;
-import com.zqksk.api.stock.model.AnalysisResponse;
+import com.zqksk.api.stock.define.indecies.MA;
+import com.zqksk.api.stock.dto.analysis.AnalysisData;
+import com.zqksk.api.stock.dto.analysis.AnalysisRequest;
+import com.zqksk.api.stock.dto.analysis.AnalysisResponse;
+import com.zqksk.api.stock.dto.kis.KisDailyItem;
+import com.zqksk.api.stock.dto.kis.KisPriceOutput;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+
+import static com.zqksk.api.stock.define.Message.ERROR_NOT_CODE;
+import static com.zqksk.api.stock.define.indecies.RSI.RSI15;
+import static com.zqksk.api.stock.util.TechnicalIndicatorCalculator.*;
 
 /**
  * KIS Open API 현재가·일봉을 조회하고, 기술적 지표(MA, RSI, MACD, 변동성, 볼린저 등)를
@@ -33,6 +37,7 @@ public class StockAnalysisService {
     private static final int DAILY_DAYS = 120; // 약 6개월 일봉
 
     private final KisProperties kisProperties;
+
     private final KisApiClient kisApiClient;
     private final KisOverseasApiClient kisOverseasApiClient;
 
@@ -41,7 +46,7 @@ public class StockAnalysisService {
             ? request.getStockCode().trim() : "";
         if (stockCode.isEmpty()) {
             log.warn("분석 요청: stockCode가 비어 있음");
-            return new AnalysisResponse("오류: 종목 코드가 없습니다.", "종목 코드를 입력해 주세요.", null);
+            return new AnalysisResponse(ERROR_NOT_CODE.getMessage(), "종목 코드를 입력해 주세요.", null);
         }
 
         boolean overseas = request.isOverseas();
@@ -147,8 +152,8 @@ public class StockAnalysisService {
         Double ma5 = d.getMa5();
         Double ma20 = d.getMa20();
         Double rsi = d.getRsi();
-        TechnicalIndicatorCalculator.MacdResult macd = d.getMacd();
-        TechnicalIndicatorCalculator.SupportResistance sr = d.getSupportResistance();
+        MacdResult macd = d.getMacd();
+        SupportResistance sr = d.getSupportResistance();
 
         String pressure = "중립";
         if (rsi != null && !Double.isNaN(rsi)) {
@@ -224,14 +229,23 @@ public class StockAnalysisService {
             lows.add(parseDouble(d.getStck_lwpr()));
         }
 
-        Double ma5 = closes.size() >= 5 ? TechnicalIndicatorCalculator.ma(closes, 5) : null;
-        Double ma20 = closes.size() >= 20 ? TechnicalIndicatorCalculator.ma(closes, 20) : null;
-        Double ma60 = closes.size() >= 60 ? TechnicalIndicatorCalculator.ma(closes, 60) : null;
-        Double rsi = closes.size() >= 15 ? TechnicalIndicatorCalculator.rsi14(closes) : null;
-        TechnicalIndicatorCalculator.MacdResult macd = TechnicalIndicatorCalculator.macd(closes);
-        Double volatility20 = closes.size() >= 21 ? TechnicalIndicatorCalculator.volatility(closes, 20) : null;
-        TechnicalIndicatorCalculator.BollingerResult bollinger = TechnicalIndicatorCalculator.bollingerBands(closes);
-        TechnicalIndicatorCalculator.SupportResistance sr = TechnicalIndicatorCalculator.supportResistance(highs, lows, Math.min(20, highs.size()));
+        // MA
+        List<Double> maList = new ArrayList<>();
+        for (MA ma : MA.values()) {
+                maList.add(ma.calculate(closes));
+        }
+        Double ma5 = closes.size() >= 5 ? ma(closes, 5) : null;
+        Double ma20 = closes.size() >= 20 ? ma(closes, 20) : null;
+        Double ma60 = closes.size() >= 60 ? ma(closes, 60) : null;
+
+        // RSI
+        Double rsi = rsi14(closes);
+        Double rsi2 = RSI15.calculate(closes);
+
+        MacdResult macd = macd(closes);
+        Double volatility20 = closes.size() >= 21 ? volatility(closes, 20) : null;
+        BollingerResult bollinger = bollingerBands(closes);
+        SupportResistance sr = supportResistance(highs, lows, Math.min(20, highs.size()));
 
         return AnalysisData.builder()
             .price(price)
@@ -242,6 +256,7 @@ public class StockAnalysisService {
             .ma5(ma5)
             .ma20(ma20)
             .ma60(ma60)
+            .maList(maList)
             .rsi(rsi)
             .macd(macd)
             .volatility20(volatility20)
@@ -282,14 +297,14 @@ public class StockAnalysisService {
             lows.add(parseDouble(d.getStck_lwpr()));
         }
 
-        Double ma5 = closes.size() >= 5 ? TechnicalIndicatorCalculator.ma(closes, 5) : null;
-        Double ma20 = closes.size() >= 20 ? TechnicalIndicatorCalculator.ma(closes, 20) : null;
-        Double ma60 = closes.size() >= 60 ? TechnicalIndicatorCalculator.ma(closes, 60) : null;
-        Double rsi = closes.size() >= 15 ? TechnicalIndicatorCalculator.rsi14(closes) : null;
-        TechnicalIndicatorCalculator.MacdResult macd = TechnicalIndicatorCalculator.macd(closes);
-        Double volatility20 = closes.size() >= 21 ? TechnicalIndicatorCalculator.volatility(closes, 20) : null;
-        TechnicalIndicatorCalculator.BollingerResult bollinger = TechnicalIndicatorCalculator.bollingerBands(closes);
-        TechnicalIndicatorCalculator.SupportResistance sr = TechnicalIndicatorCalculator.supportResistance(highs, lows, Math.min(20, highs.size()));
+        Double ma5 = closes.size() >= 5 ? ma(closes, 5) : null;
+        Double ma20 = closes.size() >= 20 ? ma(closes, 20) : null;
+        Double ma60 = closes.size() >= 60 ? ma(closes, 60) : null;
+        Double rsi = closes.size() >= 15 ? rsi14(closes) : null;
+        MacdResult macd = macd(closes);
+        Double volatility20 = closes.size() >= 21 ? volatility(closes, 20) : null;
+        BollingerResult bollinger = bollingerBands(closes);
+        SupportResistance sr = supportResistance(highs, lows, Math.min(20, highs.size()));
 
         return AnalysisData.builder()
             .price(price)
@@ -410,14 +425,14 @@ public class StockAnalysisService {
         String eps = p.getEps();
         String cap = p.getHts_avls();
         String unit = overseas ? "$" : "원";
-        if ((per != null && !per.isBlank() && !"-".equals(per)) || (pbr != null && !pbr.isBlank() && !"-".equals(pbr))) {
+        boolean b1 = pbr != null && !pbr.isBlank() && !"-".equals(pbr);
+        boolean b = per != null && !per.isBlank() && !"-".equals(per);
+        if (b || (b1)) {
             sb.append("【밸류에이션】 ");
-            if (per != null && !per.isBlank() && !"-".equals(per)) {
-                try {
-                    sb.append(String.format(Locale.US, "PER %s배, ", per));
-                } catch (Exception ignored) { }
+            if (b) {
+                sb.append(String.format(Locale.US, "PER %s배, ", per));
             }
-            if (pbr != null && !pbr.isBlank() && !"-".equals(pbr)) sb.append("PBR ").append(pbr).append("배, ");
+            if ((b1)) sb.append("PBR ").append(pbr).append("배, ");
             if (eps != null && !eps.isBlank() && !"-".equals(eps)) {
                 if (overseas) sb.append("EPS $").append(eps).append(", ");
                 else sb.append("EPS ").append(eps).append("원, ");

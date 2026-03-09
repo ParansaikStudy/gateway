@@ -34,7 +34,7 @@ public class GeminiClient {
      * 프롬프트 한 개로 텍스트 생성. 응답의 첫 번째 candidate text 반환.
      */
     public String generateContent(String prompt) {
-        if (!geminiProperties.isConfigured()) {
+        if (geminiProperties.isConfigured()) {
             throw new IllegalStateException("Gemini API 키가 설정되지 않았습니다. gemini.api-key 또는 GEMINI_API_KEY를 설정하세요.");
         }
         String url = BASE + "/" + geminiProperties.getModel() + ":generateContent?key=" + geminiProperties.getApiKey();

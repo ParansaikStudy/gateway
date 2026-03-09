@@ -3,6 +3,12 @@ package com.zqksk.api.stock.storage;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.zqksk.api.stock.define.Code;
+import com.zqksk.api.stock.dto.FileDTO;
+import com.zqksk.api.stock.dto.item.Top100NameCodeItem;
+import com.zqksk.api.stock.dto.item.Top100OverseasNameCodeItem;
+import com.zqksk.api.stock.dto.item.Top500DomesticAnalysisItem;
+import com.zqksk.api.stock.dto.item.Top500OverseasAnalysisItem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -11,12 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -26,6 +27,8 @@ import java.util.stream.Stream;
 @Slf4j
 @Component
 public class Top100AnalysisStore {
+
+    HashMap<Code, FileDTO> TOP100_ANALYSIS = new HashMap<>();
 
     private static final String FILENAME = "top100-analysis.json";
     private static final String CODES_FILENAME = "top100-codes.txt";
@@ -65,6 +68,7 @@ public class Top100AnalysisStore {
         try {
             Files.createDirectories(dataDir);
             ObjectNode root = MAPPER.createObjectNode();
+//            TOP100_ANALYSIS.put(NVIDIA, 21.3);
             root.put("generatedAt", Instant.now().toString());
             root.put("analysisText", analysisText != null ? analysisText : "");
             Files.writeString(getTop100AnalysisPath(), MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(root));
@@ -76,8 +80,7 @@ public class Top100AnalysisStore {
     }
 
     /**
-     * 저장된 탑100 분석 텍스트 조회. 없으면 empty.
-     */
+     * 저장된 탑100 분석 텍스트 조회. 없으면 empty.a
     public Optional<String> load() {
         Path path = getTop100AnalysisPath();
         if (!Files.exists(path)) {

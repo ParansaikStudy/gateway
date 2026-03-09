@@ -1,4 +1,4 @@
-package com.zqksk.api.stock.model;
+package com.zqksk.api.stock.dto.analysis;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

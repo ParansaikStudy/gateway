@@ -1,4 +1,4 @@
-package com.zqksk.api.stock.model.kakao;
+package com.zqksk.api.stock.dto.kakao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;

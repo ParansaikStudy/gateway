@@ -3,13 +3,13 @@ package com.zqksk.api.stock.job;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zqksk.api.stock.client.GeminiClient;
-import com.zqksk.api.stock.client.KisDailyItem;
 import com.zqksk.api.stock.client.KisOverseasApiClient;
-import com.zqksk.api.stock.client.KisPriceOutput;
 import com.zqksk.api.stock.config.GeminiProperties;
 import com.zqksk.api.stock.config.KisProperties;
+import com.zqksk.api.stock.dto.item.Top500OverseasAnalysisItem;
+import com.zqksk.api.stock.dto.kis.KisDailyItem;
+import com.zqksk.api.stock.dto.kis.KisPriceOutput;
 import com.zqksk.api.stock.storage.Top100AnalysisStore;
-import com.zqksk.api.stock.storage.Top500OverseasAnalysisItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -48,7 +48,7 @@ public class Top500OverseasAnalysisBatchJob {
             log.warn("탑500 해외 배치 스킵: KIS API 미설정");
             return;
         }
-        if (!geminiProperties.isConfigured()) {
+        if (geminiProperties.isConfigured()) {
             log.warn("탑500 해외 배치 스킵: Gemini API 미설정");
             return;
         }

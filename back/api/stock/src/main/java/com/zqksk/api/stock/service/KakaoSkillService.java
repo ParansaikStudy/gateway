@@ -1,8 +1,9 @@
 package com.zqksk.api.stock.service;
 
+import com.zqksk.api.stock.define.Code;
+import com.zqksk.api.stock.dto.item.Top500DomesticAnalysisItem;
+import com.zqksk.api.stock.dto.item.Top500OverseasAnalysisItem;
 import com.zqksk.api.stock.storage.Top100AnalysisStore;
-import com.zqksk.api.stock.storage.Top500DomesticAnalysisItem;
-import com.zqksk.api.stock.storage.Top500OverseasAnalysisItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.zqksk.api.stock.define.Message.DEFAULT_NOT_IN_TOP500;
 
 /**
  * 카카오 스킬: userRequest.utterance(종목명 또는 6자리 코드) →
@@ -93,7 +96,7 @@ public class KakaoSkillService {
             if (analysis != null && !analysis.isBlank()) return analysis;
         }
 
-        return MSG_NOT_IN_TOP500;
+        return DEFAULT_NOT_IN_TOP500.getMessage();
     }
 
     /** 해외 종목 해석 결과 (거래소코드 + 심볼) */
@@ -141,6 +144,7 @@ public class KakaoSkillService {
 
     private String resolveFallbackName(String utterance) {
         String key = utterance.replaceAll("\\s+", "").toLowerCase();
-        return FALLBACK_NAME_TO_CODE.get(key);
+        return Code.fromValue(key).toString();
+//        return FALLBACK_NAME_TO_CODE.get(key);
     }
 }
