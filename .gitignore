@@ -11,6 +11,7 @@
 ### Environment files ###
 .env
 .env.*
+key.env
 !.env.example
 
 ### Security keys ###
@@ -52,6 +53,9 @@ back/**/storage-database-local.yml
 
 ### Back local docs ###
 back/**/*.md
+
+### Project local docs ###
+docs/**/*.md
 
 ### Front / Node / Next ###
 front/node_modules/
